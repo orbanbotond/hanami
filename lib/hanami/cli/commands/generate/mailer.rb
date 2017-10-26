@@ -56,8 +56,7 @@ module Hanami
             source      = templates.find("mailer.erb")
             destination = project.mailer(context)
 
-            generate_file(source, destination, context)
-            say(:create, destination)
+            handle_file(source, destination, context)
           end
 
           # @since 1.1.0

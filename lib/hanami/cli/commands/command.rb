@@ -91,10 +91,11 @@ module Hanami
 
         # @since 1.1.0
         # @api private
-        def initialize(command_name:, out: $stdout, files: Utils::Files)
+        def initialize(command_name:, out: $stdout, input: $stdin, files: Utils::Files)
           super(command_name: command_name)
 
           @out       = out
+          @input     = input
           @files     = files
           @templates = Templates.new(self.class)
         end
@@ -125,11 +126,15 @@ module Hanami
 
         # @since 1.1.0
         # @api private
-        SAY_FORMATTER = "%<operation>12s  %<path>s\n".freeze
+        SAY_FORMATTER = "%<operation>12s  %<path>s".freeze
 
         # @since 1.1.0
         # @api private
         attr_reader :out
+
+        # @since x.x.x
+        # @api private
+        attr_reader :input
 
         # @since 1.1.0
         # @api private
@@ -159,8 +164,32 @@ module Hanami
 
         # @since 1.1.0
         # @api private
-        def say(operation, path)
-          out.puts(SAY_FORMATTER % { operation: operation, path: path }) # rubocop:disable Style/FormatString
+        def say(operation, path, new_line: true)
+          output = SAY_FORMATTER % { operation: operation, path: path }
+          if new_line
+            out.puts(output) # rubocop:disable Style/FormatString
+          else
+            out.print(output)
+          end
+        end
+
+        # TODO: rewrite
+        def handle_file(source, destination, context)
+          if files.exist?(destination)
+            say(:replace, "#{destination}? [Ny]", new_line: false)
+            answer = input.gets.chomp
+            negative_answers = %w[N n]
+            if answer.empty? || negative_answers.include?(answer)
+              say(:skip, destination)
+            else
+              files.delete(destination)
+              generate_file(source, destination, context)
+              say(:overwrite, destination)
+            end
+          else
+            generate_file(source, destination, context)
+            say(:create, destination)
+          end
         end
 
         # @since 1.1.0
