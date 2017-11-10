@@ -151,10 +151,17 @@ module Hanami
         # @since 1.1.0
         # @api private
         def generate_file(source, destination, context)
-          files.write(
-            destination,
-            render(source, context)
-          )
+          if files.exist?(destination)
+            files.rewrite(
+              destination,
+              render(source, context)
+            )
+          else
+            files.write(
+              destination,
+              render(source, context)
+            )
+          end
         end
 
         # @since 1.1.0
