@@ -8,7 +8,7 @@ end
 
 gem 'i18n'
 
-gem 'hanami-utils',       '~> 2.0.alpha', require: false, git: 'https://github.com/hanami/utils.git',       branch: 'unstable'
+gem 'hanami-utils',       '~> 2.0.alpha', require: false, git: 'https://github.com/hanami/utils.git',       branch: '260-convert-hash-and-string-in-modules'
 gem 'hanami-validations', '~> 2.0.alpha', require: false, git: 'https://github.com/hanami/validations.git', branch: 'unstable'
 gem 'hanami-router',      '~> 2.0.alpha', require: false, git: 'https://github.com/hanami/router.git',      branch: 'unstable'
 gem 'hanami-controller',  '~> 2.0.alpha', require: false, git: 'https://github.com/hanami/controller.git',  branch: 'unstable'
